@@ -49,7 +49,10 @@ def install(path):
             z.extractall(path)
         os.remove(os.path.join(path,"ewcode.zip"))
         if options["add_to_path"]:
-            os.system(f'setx PATH "{os.environ["PATH"]+os.pathsep+path}" > nul')
+            ospath = os.environ["PATH"].split(os.pathsep)
+            ospath = [*set(ospath)]
+            ospath.append(path)
+            os.system(f'setx PATH "{os.pathsep.join(ospath)}" > nul')
     except Exception as e:
         loaded = True
         while not sync:
@@ -88,7 +91,7 @@ if __name__ == "__main__":
         print(Fore.RED+"Platform not supported!"+Fore.RESET)
     root = Tk()
     root.withdraw()
-    install_dir = askdirectory(title="EwCode Installer - Select Installation Directory", initialdir="/")
+    install_dir = os.path.abspath(askdirectory(title="EwCode Installer - Select Installation Directory", initialdir="/"))
     if not install_dir:
         input(Fore.RED+"No directory selected! Press enter to exit..."+Fore.RESET)
         sys.exit()
@@ -113,6 +116,6 @@ if __name__ == "__main__":
         progress_thread = Thread(target=progress_bar,args=("Installing...",))
         progress_thread.start()
         install(install_dir)
-        print("\nInstallation complete")
+        print(Fore.GREEN+"\nInstallation complete"+Fore.RESET)
     else:
         print("\nExiting...")
