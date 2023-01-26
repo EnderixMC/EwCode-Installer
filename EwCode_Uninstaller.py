@@ -23,7 +23,7 @@ def uninstall(path):
     ospath.pop(ospath.index(""))
     if path in ospath:
         ospath.pop(ospath.index(path))
-        os.system(f'setx PATH {os.pathsep.join(ospath)}')
+        os.system(f'setx PATH "{os.pathsep.join(ospath)}" > nul')
     loaded = True
     while not sync:
         sleep(0.01)
