@@ -11,7 +11,7 @@ import json
 import sys
 import os
 
-__version__ = "0.1.5"
+__version__ = "0.1.0"
 credits = f"Ewcode Installer v{__version__} by EnderixMC (https://github.com/EnderixMC/EwCode-Installer)"
 
 loaded = False
