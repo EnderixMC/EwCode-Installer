@@ -17,13 +17,23 @@ sync = False
 def uninstall(path):
     global loaded
     global sync
-    rmtree(path)
-    ospath = os.environ["PATH"].split(os.pathsep)
-    ospath = [*set(ospath)]
-    ospath.pop(ospath.index(""))
-    if path in ospath:
-        ospath.pop(ospath.index(path))
-        os.system(f'setx PATH "{os.pathsep.join(ospath)}" > nul')
+    try:
+        rmtree(path)
+        ospath = os.environ["PATH"].split(os.pathsep)
+        ospath = [*set(ospath)]
+        if "" in ospath:
+            ospath.pop(ospath.index(""))
+        if path in ospath:
+            ospath.pop(ospath.index(path))
+            os.system(f'setx PATH "{os.pathsep.join(ospath)}" > nul')
+    except Exception as e:
+        loaded = True
+        while not sync:
+            sleep(0.01)
+            if sync:
+                break
+        print(Fore.RED+"Uninstall failed:", str(e)+Fore.RESET)
+        confirm_exit()
     loaded = True
     while not sync:
         sleep(0.01)
@@ -45,6 +55,11 @@ def progress_bar(text):
     print()
     sync = True
 
+def confirm_exit():
+    print("\n")
+    os.system('<nul set /p "=Press a key to proceed..."&pause >nul')
+    sys.exit()
+
 windll.shcore.SetProcessDpiAwareness(1)
 just_fix_windows_console()
 if __name__ == "__main__":
@@ -53,10 +68,14 @@ if __name__ == "__main__":
         print(Fore.RED+"Platform not supported!"+Fore.RESET)
     root = Tk()
     root.withdraw()
-    install_dir = os.path.abspath(askdirectory(title="EwCode Uninstaller - Select Installation Directory", initialdir="/"))
+    install_dir = askdirectory(title="EwCode Uninstaller - Select Installation Directory", initialdir="/")
+    if not install_dir:
+        print(Fore.RED+"No directory selected!"+Fore.RESET)
+        confirm_exit()
+    install_dir = os.path.abspath(install_dir)
     if not install_dir:
         input(Fore.RED+"No directory selected! Press enter to exit..."+Fore.RESET)
-        sys.exit()
+        confirm_exit()
     print("Selected Directory:", install_dir)
     print(Fore.YELLOW+"\n[Warning]: The entire selected directory will be deleted!"+Fore.RESET)
     if input("Are you sure you want to uninstall? (Y/N) ").lower() == "y":
@@ -65,3 +84,5 @@ if __name__ == "__main__":
         progress_thread.start()
         uninstall(install_dir)
         print(Fore.GREEN+"\nEwCode has been uninstalled"+Fore.RESET)
+
+confirm_exit()

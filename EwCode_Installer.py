@@ -33,7 +33,7 @@ def download(path):
             if sync:
                 break
         print(Fore.RED+"Download failed:", str(e)+Fore.RESET)
-        sys.exit()
+        confirm_exit()
     loaded = True
     while not sync:
         sleep(0.01)
@@ -50,8 +50,10 @@ def install(path):
         os.remove(os.path.join(path,"ewcode.zip"))
         if options["add_to_path"]:
             ospath = os.environ["PATH"].split(os.pathsep)
-            ospath = [*set(ospath)]
             ospath.append(path)
+            ospath = [*set(ospath)]
+            if "" in ospath:
+                ospath.pop(ospath.index(""))
             os.system(f'setx PATH "{os.pathsep.join(ospath)}" > nul')
     except Exception as e:
         loaded = True
@@ -60,7 +62,7 @@ def install(path):
             if sync:
                 break
         print(Fore.RED+"Install failed:", str(e)+Fore.RESET)
-        sys.exit()
+        confirm_exit()
     loaded = True
     while not sync:
         sleep(0.01)
@@ -82,6 +84,11 @@ def progress_bar(text):
     print()
     sync = True
 
+def confirm_exit():
+    print("\n")
+    os.system('<nul set /p "=Press a key to proceed..."&pause >nul')
+    sys.exit()
+
 windll.shcore.SetProcessDpiAwareness(1)
 just_fix_windows_console()
 options = {}
@@ -94,15 +101,15 @@ if __name__ == "__main__":
     install_dir = os.path.abspath(askdirectory(title="EwCode Installer - Select Installation Directory", initialdir="/"))
     if not install_dir:
         input(Fore.RED+"No directory selected! Press enter to exit..."+Fore.RESET)
-        sys.exit()
+        confirm_exit()
     if len(os.listdir(install_dir)) != 0:
         try:
             if not sys.argv[1] == "-f":
                 print(Fore.RED+"Directory not empty!"+Fore.RESET)
-                sys.exit()
+                confirm_exit()
         except IndexError:
             print(Fore.RED+"Directory not empty!"+Fore.RESET)
-            sys.exit()
+            confirm_exit()
     print("Selected Directory:", install_dir)
     print("\nOptions: (Y/N)")
     options["add_to_path"] = True if input(" *Add to PATH: ").lower() == "y" else False
@@ -119,3 +126,5 @@ if __name__ == "__main__":
         print(Fore.GREEN+"\nInstallation complete"+Fore.RESET)
     else:
         print("\nExiting...")
+
+confirm_exit()
