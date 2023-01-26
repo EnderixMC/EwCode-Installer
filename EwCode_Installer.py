@@ -3,7 +3,6 @@ from urllib.request import urlretrieve, urlopen
 from tkinter.filedialog import askdirectory
 from threading import Thread
 from zipfile import ZipFile
-from random import choice
 from ctypes import windll
 from tkinter import Tk
 from time import sleep
