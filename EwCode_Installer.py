@@ -20,7 +20,7 @@ sync = False
 def download(path):
     global loaded
     global sync
-    url = "https://api.github.com/repos/EnderixMC/EwCode/releases/tags/v1.0.0-beta"
+    url = "https://api.github.com/repos/EnderixMC/EwCode/releases/latest"
     try:
         with urlopen(url) as conn:
             url = json.loads(conn.read().decode("utf8"))["assets_url"]
