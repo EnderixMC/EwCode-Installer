@@ -9,7 +9,7 @@ import platform
 import sys
 import os
 
-__version__ = "0.0.4"
+__version__ = "0.0.5"
 credits = f"Ewcode Uninstaller v{__version__} by EnderixMC (https://github.com/EnderixMC/EwCode-Installer)"
 
 loaded = False
