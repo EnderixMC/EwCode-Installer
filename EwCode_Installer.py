@@ -33,7 +33,7 @@ def download(path):
             sleep(0.01)
             if sync:
                 break
-        print(Fore.RED+"Download failed:", e+Fore.RESET)
+        print(Fore.RED+"Download failed:", str(e)+Fore.RESET)
         sys.exit()
     loaded = True
     while not sync:
@@ -57,7 +57,7 @@ def install(path):
             sleep(0.01)
             if sync:
                 break
-        print(Fore.RED+"Install failed:", e+Fore.RESET)
+        print(Fore.RED+"Install failed:", str(e)+Fore.RESET)
         sys.exit()
     loaded = True
     while not sync:
